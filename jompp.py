@@ -21,15 +21,15 @@ player_x = 0
 player_y = game_height - player_height
 
 obstacles = [
-    {"x": 100, "y": game_height - 40},
-    {"x": 200, "y": game_height - 80},
-    {"x": 300, "y": game_height - 60},
-    {"x": 400, "y": game_height - 100}
+    {"x": 100, "y": game_height - 40, "width": 80, "height": 30},
+    {"x": 200, "y": game_height - 80, "width": 80, "height": 30},
+    {"x": 300, "y": game_height - 60, "width": 80, "height": 30},
+    {"x": 400, "y": game_height - 100, "width": 80, "height": 30}
 ]
 
 coins = [
-    {"x": 150, "y": game_height - 60},
-    {"x": 250, "y": game_height - 80}
+    {"x": 150, "y": game_height - 60, "width": 20, "height": 20},
+    {"x": 250, "y": game_height - 80, "width": 20, "height": 20}
 ]
 
 level = 1
@@ -54,24 +54,26 @@ def draw_player():
 
 def draw_obstacles():
     for obstacle in obstacles:
-        pygame.draw.rect(game_display, RED, (obstacle["x"], obstacle["y"], 80, 30))
+        pygame.draw.rect(game_display, RED, (obstacle["x"], obstacle["y"], obstacle["width"], obstacle["height"]))
 
 def draw_coins():
     for coin in coins:
-        pygame.draw.rect(game_display, YELLOW, (coin["x"], coin["y"], 20, 20))
+        pygame.draw.rect(game_display, YELLOW, (coin["x"], coin["y"], coin["width"], coin["height"]))
 
 def check_collision(rect1, rect2):
     if (
-        rect1["x"] < rect2["x"] + 80 and
+        rect1["x"] < rect2["x"] + rect2["width"] and
         rect1["x"] + player_width > rect2["x"] and
-        rect1["y"] < rect2["y"] + 30 and
-        rect1["y"] + player_height > rect2["y"] + 30
+        rect1["y"] < rect2["y"] + rect2["height"] and
+        rect1["y"] + player_height > rect2["y"]
     ):
         return True
     return False
 
 def check_collisions(player_y):
     global level, obstacles, coins
+
+    collected_coins = []
 
     for obstacle in obstacles:
         if check_collision({"x": player_x, "y": player_y}, obstacle):
@@ -82,7 +84,10 @@ def check_collisions(player_y):
 
     for coin in coins:
         if check_collision({"x": player_x, "y": player_y}, coin):
-            coins.remove(coin)
+            collected_coins.append(coin)
+
+    for coin in collected_coins:
+        coins.remove(coin)
 
     if len(coins) == 0:
         level += 1
@@ -99,14 +104,14 @@ def reset_game():
     player_x = 0
     player_y = game_height - player_height
     obstacles = [
-        {"x": 100, "y": game_height - 40},
-        {"x": 200, "y": game_height - 80},
-        {"x": 300, "y": game_height - 60},
-        {"x": 400, "y": game_height - 100}
+        {"x": 100, "y": game_height - 40, "width": 80, "height": 30},
+        {"x": 200, "y": game_height - 80, "width": 80, "height": 30},
+        {"x": 300, "y": game_height - 60, "width": 80, "height": 30},
+        {"x": 400, "y": game_height - 100, "width": 80, "height": 30}
     ]
     coins = [
-        {"x": 150, "y": game_height - 60},
-        {"x": 250, "y": game_height - 80}
+        {"x": 150, "y": game_height - 60, "width": 20, "height": 20},
+        {"x": 250, "y": game_height - 80, "width": 20, "height": 20}
     ]
 
 def start_next_level():
@@ -117,18 +122,18 @@ def start_next_level():
 def generate_obstacles():
     obstacles.clear()
     obstacle_positions = [
-        {"x": 100, "y": game_height - 40},
-        {"x": 200, "y": game_height - 80},
-        {"x": 300, "y": game_height - 60},
-        {"x": 400, "y": game_height - 100}
+        {"x": 100, "y": game_height - 40, "width": 80, "height": 30},
+        {"x": 200, "y": game_height - 80, "width": 80, "height": 30},
+        {"x": 300, "y": game_height - 60, "width": 80, "height": 30},
+        {"x": 400, "y": game_height - 100, "width": 80, "height": 30}
     ]
     obstacles.extend(obstacle_positions)
 
 def generate_coins():
     coins.clear()
     coin_positions = [
-        {"x": 150, "y": game_height - 60},
-        {"x": 250, "y": game_height - 80}
+        {"x": 150, "y": game_height - 60, "width": 20, "height": 20},
+        {"x": 250, "y": game_height - 80, "width": 20, "height": 20}
     ]
     coins.extend(coin_positions)
 
@@ -206,7 +211,7 @@ def main_loop():
         draw_coins()
         draw_text("Poziom: {}".format(level), 10, 10)
         draw_text("© Szymon Wasik 2023", 10, game_height - 30)
-        draw_text("Wersja Alpha 1.0.0", game_width - 140, game_height - 30)
+        draw_text("Wersja Alpha 1.0.1", game_width - 140, game_height - 30)
 
         pygame.display.update()
         clock.tick(60)
