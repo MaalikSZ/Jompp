@@ -164,7 +164,7 @@ def draw_game_over():
 
 def draw_copyright():
     copyright_text = "© Szymon Wasik 2023"
-    alpha_text = "Wersja Alpha 1.0.0"
+    alpha_text = "Wersja Alpha 1.0.2"
     draw_text(alpha_text, game_width - 140, game_height - 30)
     draw_text(copyright_text, 10, game_height - 30)
 
@@ -211,7 +211,7 @@ def main_loop():
         draw_coins()
         draw_text("Poziom: {}".format(level), 10, 10)
         draw_text("© Szymon Wasik 2023", 10, game_height - 30)
-        draw_text("Wersja Alpha 1.0.1", game_width - 140, game_height - 30)
+        draw_text("Wersja Alpha 1.0.2", game_width - 140, game_height - 30)
 
         pygame.display.update()
         clock.tick(60)
